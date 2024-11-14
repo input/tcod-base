@@ -8,7 +8,7 @@ from tcod.event import KeySym
 
 import game.managers.global_manager as global_manager
 from game.components import Gold, Graphic, Position, Tiles
-from game.constants import DIRECTION_KEYS
+from game.constants import COLOR_BLACK, COLOR_GROUND, COLOR_WHITE, DIRECTION_KEYS
 from game.states.base_state import BaseState
 from game.tags import IsItem, IsPlayer
 from game.ui.ui_debug_panel import UIDebugPanel
@@ -109,7 +109,7 @@ class PlayState(BaseState):
         # Draw the map.
         screen_view, world_view = tcod.camera.get_views(console.rgb, map.components[Tiles], self.camera_ij)
         screen_view["ch"] = world_view
-        screen_view["bg"] = (18, 71, 34)
+        screen_view["bg"] = COLOR_GROUND
 
         # Draw the @, $, etc.
         for entity in global_manager.world.Q.all_of(components=[Position, Graphic]):
@@ -124,7 +124,7 @@ class PlayState(BaseState):
 
         # Highlight the tile under the mouse.
         if self.cursor_screen_xy and 0 <= self.cursor_screen_xy[0] < console.width and 0 <= self.cursor_screen_xy[1] < console.height:
-            console.rgb[["fg", "bg"]][self.cursor_screen_xy[1], self.cursor_screen_xy[0]] = (0, 0, 0), (255, 255, 255)
+            console.rgb[["fg", "bg"]][self.cursor_screen_xy[1], self.cursor_screen_xy[0]] = COLOR_BLACK, COLOR_WHITE
 
     def draw_ui(self, console: tcod.console.Console) -> None:
         """Draw the UI."""

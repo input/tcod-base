@@ -6,6 +6,7 @@ import tcod.console
 import tcod.event
 
 import game.managers.global_manager as global_manager
+from game.constants import COLOR_BLACK, COLOR_WHITE
 from game.ui.ui_panel import UIPanel
 
 
@@ -22,4 +23,4 @@ class UIMessagePanel(UIPanel):
 
         # Draw information text at the bottom left of the screen.
         if text := global_manager.world[None].components.get(("Text", str)):
-            console.print(0, console.height - 1, text, (255, 255, 255), (0, 0, 0))
+            console.print(0, console.height - 1, text, COLOR_WHITE, COLOR_BLACK)

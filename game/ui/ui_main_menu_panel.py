@@ -3,7 +3,7 @@ from __future__ import annotations
 import tcod.event
 from tcod.event import KeySym
 
-from game.constants import TITLE, DIRECTION_KEYS
+from game.constants import COLOR_GRAY, COLOR_WHITE, TITLE, DIRECTION_KEYS
 from game.managers.event_manager import Event
 from game.ui.ui_button import UIButton
 from game.ui.ui_panel import UIPanel
@@ -48,8 +48,8 @@ class UIMainMenuPanel(UIPanel):
                 console.width // 2,
                 5 + i,
                 button.label,
-                (255, 255, 255),
-                (64, 64, 64),
+                COLOR_WHITE,
+                COLOR_GRAY,
                 alignment=tcod.constants.CENTER
             )
 

@@ -8,7 +8,7 @@ import numpy as np
 from tcod.ecs import Registry
 
 from game.components import Gold, Graphic, Position, Tiles
-from game.constants import GROUND, MAP_HEIGHT, MAP_WIDTH
+from game.constants import COLOR_GOLD, GROUND, MAP_HEIGHT, MAP_WIDTH
 from game.tags import IsActor, IsItem, IsPlayer
 
 
@@ -33,7 +33,7 @@ def new_world() -> Registry:
     for _ in range(50):
         gold = world[object()]
         gold.components[Position] = Position(rng.randint(0, MAP_WIDTH), rng.randint(0, MAP_HEIGHT))
-        gold.components[Graphic] = Graphic(ord("$"), fg=(255, 255, 0))
+        gold.components[Graphic] = Graphic(ord("$"), COLOR_GOLD)
         gold.components[Gold] = rng.randint(1, 10)
         gold.tags |= {IsItem}
 

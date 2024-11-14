@@ -4,6 +4,7 @@ import tcod.console
 import tcod.event
 from tcod.event import KeySym
 
+from game.constants import COLOR_GRAY, COLOR_WHITE
 from game.managers.event_manager import Event
 from game.ui.ui_button import UIButton
 from game.ui.ui_panel import UIPanel
@@ -46,8 +47,8 @@ class UISettingsPanel(UIPanel):
                 console.width // 2,
                 5 + i,
                 button.label,
-                (255, 255, 255),
-                (64, 64, 64),
+                COLOR_WHITE,
+                COLOR_GRAY,
                 alignment=tcod.constants.CENTER
             )
 

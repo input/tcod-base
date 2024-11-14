@@ -9,6 +9,8 @@ import attrs
 import tcod.ecs.callbacks
 from tcod.ecs import Entity
 
+from game.constants import COLOR_WHITE
+
 
 @attrs.define(frozen=True)
 class Position:
@@ -41,7 +43,7 @@ class Graphic:
     """An entity's icon and color."""
 
     ch: int = ord("!")
-    fg: tuple[int, int, int] = (255, 255, 255)
+    fg: tuple[int, int, int] = COLOR_WHITE
 
 
 Tiles = ("Tiles", NDArray[Any])

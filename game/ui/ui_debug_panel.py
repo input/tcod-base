@@ -7,6 +7,7 @@ import tcod.event
 
 import game.managers.global_manager as global_manager
 from game.components import Position
+from game.constants import COLOR_NAVY, COLOR_WHITE
 from game.tags import IsPlayer
 from game.ui.ui_panel import UIPanel
 
@@ -29,7 +30,7 @@ class UIDebugPanel(UIPanel):
         console.draw_frame(x=9, y=0, width=3, height=3, decoration="/-\\| |\\-/")
 
         # A test rectangle.
-        console.draw_rect(15, 15, 6, 6, 0, (255, 255, 255), (15, 13, 109))
+        console.draw_rect(15, 15, 6, 6, 0, COLOR_WHITE, COLOR_NAVY)
 
         # Get the player entity.
         (player,) = global_manager.world.Q.all_of(tags=[IsPlayer])
@@ -41,8 +42,8 @@ class UIDebugPanel(UIPanel):
             console.width,
             0,
             f"\nPlayer pos: {player.components[Position].x, player.components[Position].y}",
-            (255, 255, 255),
-            (55, 55, 155),
+            COLOR_WHITE,
+            COLOR_NAVY,
             1,
             2,
         )
