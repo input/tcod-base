@@ -16,6 +16,9 @@ console: tcod.console.Console
 context: tcod.context.Context
 """The window managed by tcod."""
 
+maps: dict = {}
+"""Map entities."""
+
 state: BaseState | InitState
 """The current state."""
 

@@ -4,13 +4,16 @@ import tcod.camera
 import tcod.console
 import tcod.constants
 import tcod.event
-from tcod.event import KeySym
+from tcod.event import KeySym, Modifier
 
 import game.managers.global_manager as global_manager
+from game.actions.move_action import MoveAction
+from game.actions.take_stairs_action import TakeStairsAction
 from game.components import Gold, Graphic, Position, Tiles
-from game.constants import COLOR_BLACK, COLOR_GROUND, COLOR_WHITE, DIRECTION_KEYS
+from game.constants import COLOR_BLACK, COLOR_GROUND, COLOR_WATER, COLOR_WHITE, DIRECTION_KEYS
+from game.managers.actor_manager import do_action
 from game.states.base_state import BaseState
-from game.tags import IsItem, IsPlayer
+from game.tags import IsIn, IsItem, IsPlayer
 from game.ui.ui_debug_panel import UIDebugPanel
 from game.ui.ui_message_panel import UIMessagePanel
 from game.ui.ui_panel import UIPanel
@@ -48,28 +51,17 @@ class PlayState(BaseState):
         # additional data about the mouse's coordinates.
         global_manager.context.convert_event(event)
 
+        match event:
+            case tcod.event.KeyDown(sym=KeySym.PERIOD, mod=mod) if mod & Modifier.SHIFT:
+                return do_action(player, TakeStairsAction("down"))
+            case tcod.event.KeyDown(sym=KeySym.COMMA, mod=mod) if mod & Modifier.SHIFT:
+                return do_action(player, TakeStairsAction("up"))
+
         if isinstance(event, tcod.event.Quit):
             raise SystemExit()
         elif isinstance(event, tcod.event.KeyDown):
             if event.sym in DIRECTION_KEYS:
-                # Move the player.
-                player.components[Position] += DIRECTION_KEYS[event.sym]
-
-                # Check whether the player has stepped on gold and, if so,
-                # automatically pick it up. If the player has stepped on gold,
-                # there will be an entity with:
-                # - component: Gold
-                # - tags: player's current position; IsItem
-                for gold in global_manager.world.Q.all_of(components=[Gold], tags=[player.components[Position], IsItem]):
-                    # Modify the player's gold total by the value of the gold
-                    # collected.
-                    player.components[Gold] += gold.components[Gold]
-
-                    # Update the text.
-                    text = f"Picked up {gold.components[Gold]}g, total: {player.components[Gold]}g"
-                    global_manager.world[None].components[("Text", str)] = text
-
-                    gold.clear()
+                return do_action(player, MoveAction(DIRECTION_KEYS[event.sym]))
             # if event.sym == KeySym.ESCAPE:
             #     print("event.sym == KeySym.ESCAPE")
             if event.sym == KeySym.d:
@@ -90,7 +82,7 @@ class PlayState(BaseState):
         (player,) = global_manager.world.Q.all_of(tags=[IsPlayer])
 
         # Get the map entity.
-        (map,) = global_manager.world.Q.all_of(components=[Tiles])
+        map = player.relation_tag[IsIn]
 
         # Center the camera on the player.
         self.camera_ij = tcod.camera.get_camera(console.rgb.shape, (player.components[Position].y, player.components[Position].x))
@@ -109,10 +101,10 @@ class PlayState(BaseState):
         # Draw the map.
         screen_view, world_view = tcod.camera.get_views(console.rgb, map.components[Tiles], self.camera_ij)
         screen_view["ch"] = world_view
-        screen_view["bg"] = COLOR_GROUND
+        screen_view["bg"] = COLOR_GROUND if map == global_manager.maps["map0"] else COLOR_WATER
 
         # Draw the @, $, etc.
-        for entity in global_manager.world.Q.all_of(components=[Position, Graphic]):
+        for entity in global_manager.world.Q.all_of(components=[Position, Graphic], relations=[(IsIn, map)]):
             pos = entity.components[Position]
             pos_y = pos.y - self.camera_ij[0]
             pos_x = pos.x - self.camera_ij[1]
@@ -120,7 +112,10 @@ class PlayState(BaseState):
             if not (0 <= pos_x < console.width and 0 <= pos_y < console.height):
                 continue
             graphic = entity.components[Graphic]
-            console.rgb[["ch", "fg"]][pos_y, pos_x] = graphic.ch, graphic.fg
+            if graphic.bg:
+                console.rgb[["ch", "fg", "bg"]][pos_y, pos_x] = graphic.ch, graphic.fg, graphic.bg
+            else:
+                console.rgb[["ch", "fg"]][pos_y, pos_x] = graphic.ch, graphic.fg
 
         # Highlight the tile under the mouse.
         if self.cursor_screen_xy and 0 <= self.cursor_screen_xy[0] < console.width and 0 <= self.cursor_screen_xy[1] < console.height:

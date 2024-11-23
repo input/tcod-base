@@ -41,8 +41,9 @@ TILESHEET_COLUMNS = 16
 TILESHEET_ROWS = 16
 TILESHEET_PATH = TILESHEET_DIR / TILESHEET
 
-# Graphics.
+# Map graphics.
 GROUND: NDArray[np.int32] = np.array([ord(ch) for ch in "    ,.'`"], dtype=np.int32)
+WATER: NDArray[np.int32] = np.array([ord(ch) for ch in "    ~≈"], dtype=np.int32)
 
 # Keys.
 DIRECTION_KEYS: Final = {
@@ -124,5 +125,7 @@ COLOR_BLACK = (0, 0, 0)
 COLOR_GOLD = (255, 255, 0)
 COLOR_GRAY = (64, 64, 64)
 COLOR_GROUND = (1, 92, 1)
+COLOR_MAGENTA = (255, 0, 255)
 COLOR_NAVY = (0, 0, 128)
+COLOR_WATER = (66, 135, 245)
 COLOR_WHITE = (255, 255, 255)

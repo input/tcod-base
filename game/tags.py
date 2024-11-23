@@ -12,3 +12,6 @@ IsActor: Final = "IsActor"
 
 IsItem: Final = "IsItem"
 """Entity is an item."""
+
+IsIn: Final = "IsIn"
+"""Entity is-in relation."""

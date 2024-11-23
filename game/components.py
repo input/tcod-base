@@ -44,6 +44,7 @@ class Graphic:
 
     ch: int = ord("!")
     fg: tuple[int, int, int] = COLOR_WHITE
+    bg: tuple[int, int, int] | None = None
 
 
 Tiles = ("Tiles", NDArray[Any])
