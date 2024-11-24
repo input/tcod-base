@@ -18,6 +18,7 @@ class UIButton():
     def on_event(self, event: tcod.event.Event) -> None:
         """Handle events passed to the button."""
 
-        if isinstance(event, tcod.event.KeyDown):
-            if event.sym == self.key:
-                return self.callback()
+        match event:
+            case tcod.event.KeyDown():
+                if event.sym == self.key:
+                    return self.callback()

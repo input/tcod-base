@@ -52,28 +52,24 @@ class PlayState(BaseState):
         global_manager.context.convert_event(event)
 
         match event:
-            case tcod.event.KeyDown(sym=KeySym.PERIOD, mod=mod) if mod & Modifier.SHIFT:
-                return do_action(player, TakeStairsAction("down"))
-            case tcod.event.KeyDown(sym=KeySym.COMMA, mod=mod) if mod & Modifier.SHIFT:
-                return do_action(player, TakeStairsAction("up"))
-
-        if isinstance(event, tcod.event.Quit):
-            raise SystemExit()
-        elif isinstance(event, tcod.event.KeyDown):
-            if event.sym in DIRECTION_KEYS:
-                return do_action(player, MoveAction(DIRECTION_KEYS[event.sym]))
-            # if event.sym == KeySym.ESCAPE:
-            #     print("event.sym == KeySym.ESCAPE")
-            if event.sym == KeySym.d:
-                # Display the debug panel.
-                self.ui_debug_panel.is_visible = not self.ui_debug_panel.is_visible
-        # elif isinstance(event, tcod.event.MouseButtonDown):
-        #     print(event)
-        elif isinstance(event, tcod.event.MouseMotion):
-            # print(event)
-            self.cursor_screen_xy = event.tile.x, event.tile.y
-        else:
-            return None
+            case tcod.event.Quit():
+                raise SystemExit()
+            case tcod.event.KeyDown():
+                # DIRECTION_KEYS = move the player.
+                if event.sym in DIRECTION_KEYS:
+                    return do_action(player, MoveAction(DIRECTION_KEYS[event.sym]))
+                # d = show/hide the UI debug panel.
+                if event.sym == KeySym.d:
+                    self.ui_debug_panel.is_visible = not self.ui_debug_panel.is_visible
+                # > (. + shift) = take stairs down.
+                # < (, + shift) = take stairs up.
+                if event.mod & tcod.event.Modifier.SHIFT:
+                    if event.sym == KeySym.PERIOD:
+                        return do_action(player, TakeStairsAction("down"))
+                    if event.sym == KeySym.COMMA:
+                        return do_action(player, TakeStairsAction("up"))
+            case tcod.event.MouseMotion():
+                self.cursor_screen_xy = event.tile.x, event.tile.y
 
     def draw_world(self, console: tcod.console.Console) -> None:
         """Draw everything except the UI."""

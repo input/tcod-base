@@ -17,11 +17,12 @@ class UISettingsPanel(UIPanel):
     def on_event(self, event: tcod.event.Event) -> None:
         """Called on events."""
 
-        if isinstance(event, tcod.event.Quit):
-            raise SystemExit()
-        elif isinstance(event, tcod.event.KeyDown):
-            for i, button in enumerate(self.buttons):
-                button.on_event(event)
+        match event:
+            case tcod.event.Quit():
+                raise SystemExit()
+            case tcod.event.KeyDown():
+                for i, button in enumerate(self.buttons):
+                    button.on_event(event)
 
     def on_draw(self, console: tcod.console.Console) -> None:
         """Called when the panel is being drawn."""
