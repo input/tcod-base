@@ -21,7 +21,7 @@ A state can be thought of as a container within which a specific part of the gam
 
 A manager manages a specific aspect of the game.
 
-Conceptually, `tcod-base` implementes a two-tier hierarchy for managers, whereby the game manager (`game/managers/game_manager.py`) is the top-level manager and all other managers are on the level below.
+Conceptually, `tcod-base` implementes a two-tier hierarchy for managers, whereby the game manager ([`game_manager.py`](/game/managers/game_manager.py)) is the top-level manager and all other managers are on the level below.
 
 *[Further documentation](manager.md)*
 

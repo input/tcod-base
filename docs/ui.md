@@ -7,4 +7,4 @@
 
 Conceptually, the UI system comprises elements (for example, a [UI button](/game/ui/ui_button.py) or a [UI panel](/game/ui/ui_panel.py)) which can be combined and/or overridden to compose a complete UI piece. A complete UI piece can then be drawn as required, for example by a state's `on_draw` method.
 
-Each UI element and each complete UI piece is defined in its own module (`game/ui/`).
+Each UI element and each complete UI piece is defined in its own module (in [`/game/ui`](/game/ui)).

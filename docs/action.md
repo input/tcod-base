@@ -5,7 +5,7 @@ Every action an actor can take is defined in a `*_action.py` file.
 
 ## Actions
 
-`tcod-base` includes the following actions (in `game/actions/`):
+`tcod-base` includes the following actions (in [`/game/actions`](/game/actions)):
 
 | File | Description |
 | -----| ----------- |

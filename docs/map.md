@@ -5,7 +5,7 @@
 
 ## How it works
 
-In `game/constants.py`:
+In [`constants.py`](/game/constants.py):
 
 1. Define the maps' dimensions (in tiles).
 ```
@@ -19,12 +19,12 @@ GROUND: NDArray[np.int32] = np.array([ord(ch) for ch in "    ,.'`"], dtype=np.in
 WATER: NDArray[np.int32] = np.array([ord(ch) for ch in "    ~≈"], dtype=np.int32)
 ```
 
-In `game/components.py`, create a `Tiles` component:
+In [`components.py`](/game/components.py), create a `Tiles` component:
 ```
 Tiles = ("Tiles", NDArray[Any])
 ```
 
-In `game/managers/world_manager.py`, create two `map` entities and give each a `Tiles` component which references the relevant unicode array:
+In [`world_manager.py`](/game/managers/world_manager.py), create two `map` entities and give each a `Tiles` component which references the relevant unicode array:
 ```
 map0 = world[object()]
 map0.components[Tiles] = GROUND[np.random.randint(GROUND.size, size=(MAP_HEIGHT, MAP_WIDTH))]
@@ -35,7 +35,7 @@ map1.components[Tiles] = WATER[np.random.randint(WATER.size, size=(MAP_HEIGHT, M
 global_manager.maps["map1"] = map1
 ```
 
-In `game/states/play_state.py`:
+In [`play_state.py`](/game/states/play_state.py), render the relevant map:
 ```
 screen_view, world_view = tcod.camera.get_views(console.rgb, map.components[Tiles], self.camera_ij)
 screen_view["ch"] = world_view

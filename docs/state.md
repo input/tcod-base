@@ -7,7 +7,7 @@ A state can be thought of as a container within which a specific part of the gam
 
 ## States
 
-`tcod-base` includes the following states (in `game/states/`):
+`tcod-base` includes the following states (in [`/game/states`](/game/states)):
 
 | File | Description |
 | -----| ----------- |
@@ -19,7 +19,7 @@ A state can be thought of as a container within which a specific part of the gam
 
 ## How it works
 
-The game manager (`game/managers/game_manager.py`) has sole responsibility for setting a state (via `game_manager.set_state`).
+The game manager ([`game_manager.py`](/game/managers/game_manager.py)) has sole responsibility for setting a state (via `game_manager.set_state`).
 
 When the game starts, the game manager sets the current state to `InitState`. Once `InitState` has finished, the game manager sets the current state to `MainMenuState`. From here, clicking the `[n] New game` button raises an event. The game manager observes the event and sets the current state to `PlayState`.
 
@@ -31,19 +31,19 @@ Game start --> `InitState` --> `MainMenuState` <----> `PlayState`
 
 ### Current state
 
-The current state is stored in the global manager (`game/managers/global_manager.py`).
+The current state is stored in the global manager ([`global_manager.py`](/game/managers/global_manager.py)).
 ```
 state: BaseState
 ```
 
 If it is instead necessary to store a history comprising multiple states, one solution would be to use a list, like so:
 
-1. Modify `global_manager.py`:
+1. Modify [`global_manager.py`](/game/managers/global_manager.py):
 ```
 states: list[BaseState] = []
 ```
 
-2. Modify `game_manager.py`:
+2. Modify [`game_manager.py`](/game/managers/game_manager.py):
 ```
 global_manager.states.append(state)
 ...

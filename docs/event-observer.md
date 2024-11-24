@@ -2,7 +2,7 @@
 
 `tcod-base` implements a minimal, general-purpose event-observer system for utilising the observer pattern.
 
-See `game/managers/event_manager.py` for the two key classes - `Observer` and `Event`. These are discussed in more detail below.
+See [`event_manager.py`](/game/managers/event_manager.py) for the two key classes - `Observer` and `Event`. These are discussed in more detail below.
 
 Note: [`tcod-ecs`](https://github.com/HexDecimal/python-tcod-ecs) (tcod's entity component system) already implements an ECS-specific solution for observing component changes.
 
@@ -70,7 +70,7 @@ Event("thing_clicked", "data goes here")
 
 One example of the observer pattern can be found in the code which handles starting a new game.
 
-The main menu UI module (`game/ui/ui_main_menu_panel.py`) imports the `Event` class and defines a `[n] New game` button.
+The main menu UI module ([`ui_main_menu_panel.py`](/game/ui/ui_main_menu_panel.py)) imports the `Event` class and defines a `[n] New game` button.
 ```
 from game.managers.event_manager import Event
 
@@ -86,7 +86,7 @@ def new_game_button_clicked(self):
     Event('new_game_button_clicked', '')
 ```
 
-The `GameManager` class (`game/managers/game_manager.py`) observes this event and then proceeds as needed (in this case, first instructing the world manager to generate a new world, and then starting the play state).
+The `GameManager` class ([`game_manager.py`](/game/managers/game_manager.py)) observes this event and then proceeds as needed (in this case, first instructing the world manager to generate a new world, and then starting the play state).
 ```
 from game.managers.event_manager import Observer
 

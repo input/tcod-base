@@ -9,8 +9,8 @@
 
 - `stairs_up` and `stairs_down` entities are drawn on the relevant maps
 - keyboard controls (`<` and `>`) are added for taking stairs up/down
-- when the respective keyboard controls are pressed, a `TakeStairs` action is executed
-- the `TakeStairs` action checks if the move is valid and, if so, the player moves from one map to another
+- when the respective keyboard controls are pressed, a `TakeStairsAction` is executed
+- the `TakeStairsAction` checks if the move is valid and, if so, the player moves from one map to another
 
 ### Code
 
@@ -49,15 +49,16 @@ stairs_down.tags.add("down")
 stairs_down.relation_tag[IsIn] = map0
 ```
 
-In [`take_stairs_action.py`](/game/actions/take_stairs_action.py), create a `TakeStairs` [action](action.md).
+In [`take_stairs_action.py`](/game/actions/take_stairs_action.py), create a `TakeStairsAction` (also see the [action](action.md) documentation).
 
 In [`play_state.py`](/game/states/play_state.py), in `on_event()` add the player keyboard controls for taking stairs up/down.
 
 ```
-# Case '>' ('.' + shift)
-case tcod.event.KeyDown(sym=KeySym.PERIOD, mod=mod) if mod & Modifier.SHIFT:
-    return do_action(player, TakeStairsAction("down"))
-# Case '<' (',' + shift)
-case tcod.event.KeyDown(sym=KeySym.COMMA, mod=mod) if mod & Modifier.SHIFT:
-    return do_action(player, TakeStairsAction("up"))
+# > (. + shift) = take stairs down.
+# < (, + shift) = take stairs up.
+if event.mod & tcod.event.Modifier.SHIFT:
+    if event.sym == KeySym.PERIOD:
+        return do_action(player, TakeStairsAction("down"))
+    if event.sym == KeySym.COMMA:
+        return do_action(player, TakeStairsAction("up"))
 ```

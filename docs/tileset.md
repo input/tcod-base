@@ -11,11 +11,11 @@ See `python-tcod`'s documentation for details: [`tcod.tileset`](https://python-t
 
 If necessary, add a new font or tilesheet to the relevant `assets` directory.
 
-Fonts are stored in `assets/fonts`. Tilesheets are stored in `assets/tilesheets`.
+Fonts are stored in [`/assets/fonts`](/assets/fonts). Tilesheets are stored in [`/assets/tilesheets`](/assets/tilesheets).
 
 ### Modify font/tilesheet values
 
-In `game/constants.py`:
+In [`constants.py`](/game/constants.py):
 
 1. Set the `TILE_SOURCE` to either `font` or `tilesheet`.
 ```
@@ -50,10 +50,10 @@ See `python-tcod`'s documentation for details: [`tcod.tileset.load_truetype_font
 
 The tileset is initialised during the `InitState`.
 
-- `GameManager.__init__()` (`game/managers/game_manager.py`) sets the state to `InitState`
+- `GameManager.__init__()` ([`game_manager.py`](/game/managers/game_manager.py)) sets the state to `InitState`
 
-- `InitState.__init__()` (`game/managers/tile_manager.py`) calls `tile_manager.__init__()`
+- `InitState.__init__()` ([`init_state.py`](/game/states/init_state.py)) calls `tile_manager.__init__()`
 
-- `tile_manager.__init__()` (`game/managers/tile_manager.py`) calls `tile_manager.load_tileset()`
+- `tile_manager.__init__()` ([`tile_manager.py`](/game/managers/tile_manager.py)) calls `tile_manager.load_tileset()`
 
 - `tile_manager.load_tileset()` loads the tileset using either a font or tilesheet (as defined by the `TILE_SOURCE` value)
