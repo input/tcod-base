@@ -13,6 +13,7 @@ Features include base implementations of:
 - general-purpose event-observer system
 - keyboard controls
 - map generation
+- inventory
 
 
 ## Install

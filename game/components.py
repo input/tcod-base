@@ -50,5 +50,8 @@ class Graphic:
 Tiles = ("Tiles", NDArray[Any])
 """Map tiles."""
 
-Gold: Final = ("Gold", int)
-"""Amount of gold."""
+Quantity: Final = ("Quantity", int)
+"""Quantity of an item."""
+
+Name: Final = ("Name", str)
+"""Name of an entity."""

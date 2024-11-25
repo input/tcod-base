@@ -8,7 +8,7 @@ import numpy as np
 from tcod.ecs import Registry
 
 import game.managers.global_manager as global_manager
-from game.components import Gold, Graphic, Position, Tiles
+from game.components import Graphic, Name, Position, Quantity, Tiles
 from game.constants import COLOR_BLACK, COLOR_GOLD, COLOR_MAGENTA, GROUND, MAP_HEIGHT, MAP_WIDTH, WATER
 from game.tags import IsActor, IsIn, IsItem, IsPlayer
 
@@ -31,7 +31,6 @@ def new_world() -> Registry:
     player = world[object()]
     player.components[Position] = Position(MAP_WIDTH // 2, MAP_HEIGHT // 2)
     player.components[Graphic] = Graphic(ord("@"))
-    player.components[Gold] = 0
     player.tags |= {IsPlayer, IsActor}
     player.relation_tag[IsIn] = map0
 
@@ -53,8 +52,17 @@ def new_world() -> Registry:
         gold = world[object()]
         gold.components[Position] = Position(rng.randint(0, MAP_WIDTH), rng.randint(0, MAP_HEIGHT))
         gold.components[Graphic] = Graphic(ord("$"), COLOR_GOLD)
-        gold.components[Gold] = rng.randint(1, 10)
+        gold.components[Quantity] = rng.randint(1, 10)
+        gold.components[Name] = "Gold"
         gold.tags |= {IsItem}
         gold.relation_tag[IsIn] = map0
+
+    scroll = world[object()]
+    scroll.components[Position] = Position(MAP_WIDTH // 2, MAP_HEIGHT // 2)
+    scroll.components[Graphic] = Graphic(ord("?"))
+    scroll.components[Quantity] = 1
+    scroll.components[Name] = "Scroll"
+    scroll.tags |= {IsItem}
+    scroll.relation_tag[IsIn] = map1
 
     return world

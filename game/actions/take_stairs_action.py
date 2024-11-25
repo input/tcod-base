@@ -13,7 +13,7 @@ from game.tags import IsIn
 
 @attrs.define
 class TakeStairsAction(BaseAction):
-    """Moves the player from one level/map to another."""
+    """Move an actor from one level/map to another."""
 
     direction: Literal["down", "up"]
 

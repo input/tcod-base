@@ -9,17 +9,20 @@ from tcod.event import KeySym, Modifier
 import game.managers.global_manager as global_manager
 from game.actions.move_action import MoveAction
 from game.actions.take_stairs_action import TakeStairsAction
-from game.components import Gold, Graphic, Position, Tiles
+from game.components import Graphic, Position, Tiles
 from game.constants import COLOR_BLACK, COLOR_GROUND, COLOR_WATER, COLOR_WHITE, DIRECTION_KEYS
 from game.managers.actor_manager import do_action
+from game.managers.event_manager import Observer
+from game.managers.ui_manager import UIManager
 from game.states.base_state import BaseState
-from game.tags import IsIn, IsItem, IsPlayer
+from game.tags import IsIn, IsPlayer
 from game.ui.ui_debug_panel import UIDebugPanel
+from game.ui.ui_inventory_panel import UIInventoryPanel
 from game.ui.ui_message_panel import UIMessagePanel
 from game.ui.ui_panel import UIPanel
 
 
-class PlayState(BaseState):
+class PlayState(BaseState, Observer):
     """The play state."""
 
     camera_ij: tuple[int, ...] = (1, 1)
@@ -31,45 +34,65 @@ class PlayState(BaseState):
     cursor_world_xy: None | tuple[int, int] = None
 
     # UI.
-    ui_debug_panel: UIDebugPanel | None = None
-    ui_message_panel: UIMessagePanel | None = None
+    ui_debug_panel: UIDebugPanel
+    ui_inventory_panel: UIInventoryPanel
+    ui_message_panel: UIMessagePanel
     ui_panels: dict[str, UIPanel] = {}
 
+    # A UI panel which covers the whole screen.
+    # For example, the inventory panel.
+    ui_full_panel: UIPanel | None = None
+
     def __init__(self) -> None:
+        # Initialise UI.
+        self.ui_manager = UIManager()
         self.ui_debug_panel = UIDebugPanel()
+        self.ui_inventory_panel = UIInventoryPanel()
         self.ui_message_panel = UIMessagePanel()
         self.ui_panels["ui_debug_panel"] = self.ui_debug_panel
         self.ui_panels["ui_message_panel"] = self.ui_message_panel
 
+        # Observe events.
+        Observer.__init__(self)
+        self.observe("ui_full_panel_closed", self.on_ui_full_panel_closed)
+
     def on_event(self, event: tcod.event.Event) -> None:
         """Handle events for the play state."""
 
-        # Get the player entity.
-        (player,) = global_manager.world.Q.all_of(tags=[IsPlayer])
+        # If a full UI panel is open, only handle its specific events.
+        if self.ui_full_panel is not None:
+            self.ui_full_panel.on_event(event)
+        # Else, handle events for everything else.
+        else:
+            # Get the player entity.
+            (player,) = global_manager.world.Q.all_of(tags=[IsPlayer])
 
-        # Convert 'event' into a modified copy of itself which includes
-        # additional data about the mouse's coordinates.
-        global_manager.context.convert_event(event)
+            # Convert 'event' into a modified copy of itself which includes
+            # additional data about the mouse's coordinates.
+            global_manager.context.convert_event(event)
 
-        match event:
-            case tcod.event.Quit():
-                raise SystemExit()
-            case tcod.event.KeyDown():
-                # DIRECTION_KEYS = move the player.
-                if event.sym in DIRECTION_KEYS:
-                    return do_action(player, MoveAction(DIRECTION_KEYS[event.sym]))
-                # d = show/hide the UI debug panel.
-                if event.sym == KeySym.d:
-                    self.ui_debug_panel.is_visible = not self.ui_debug_panel.is_visible
-                # > (. + shift) = take stairs down.
-                # < (, + shift) = take stairs up.
-                if event.mod & tcod.event.Modifier.SHIFT:
-                    if event.sym == KeySym.PERIOD:
-                        return do_action(player, TakeStairsAction("down"))
-                    if event.sym == KeySym.COMMA:
-                        return do_action(player, TakeStairsAction("up"))
-            case tcod.event.MouseMotion():
-                self.cursor_screen_xy = event.tile.x, event.tile.y
+            match event:
+                case tcod.event.Quit():
+                    raise SystemExit()
+                case tcod.event.KeyDown():
+                    # DIRECTION_KEYS = move the player.
+                    if event.sym in DIRECTION_KEYS:
+                        return do_action(player, MoveAction(DIRECTION_KEYS[event.sym]))
+                    # d = show/hide the UI debug panel.
+                    if event.sym == KeySym.d:
+                        self.ui_debug_panel.is_visible = not self.ui_debug_panel.is_visible
+                    # i = show/hide the UI inventory panel.
+                    if event.sym == KeySym.i:
+                        self.ui_full_panel = self.ui_inventory_panel
+                    # > (. + shift) = take stairs down.
+                    # < (, + shift) = take stairs up.
+                    if event.mod & tcod.event.Modifier.SHIFT:
+                        if event.sym == KeySym.PERIOD:
+                            return do_action(player, TakeStairsAction("down"))
+                        if event.sym == KeySym.COMMA:
+                            return do_action(player, TakeStairsAction("up"))
+                case tcod.event.MouseMotion():
+                    self.cursor_screen_xy = event.tile.x, event.tile.y
 
     def draw_world(self, console: tcod.console.Console) -> None:
         """Draw everything except the UI."""
@@ -128,5 +151,15 @@ class PlayState(BaseState):
     def on_draw(self, console: tcod.console.Console) -> None:
         """Handle drawing for the play state."""
 
-        self.draw_world(console)
-        self.draw_ui(console)
+        # If a full UI panel is open, only draw it and nothing else.
+        if self.ui_full_panel is not None:
+            self.ui_full_panel.on_draw(console)
+        # Else, draw everything else.
+        else:
+            self.draw_world(console)
+            self.draw_ui(console)
+
+    def on_ui_full_panel_closed(self, data: str) -> None:
+        """Callback for the ui_full_panel_closed event."""
+
+        self.ui_full_panel = None
