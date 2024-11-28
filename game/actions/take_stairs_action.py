@@ -19,7 +19,8 @@ class TakeStairsAction(BaseAction):
     direction: Literal["down", "up"]
 
     def __call__(self, actor: tcod.ecs.Entity) -> None:
-        stairs_found = actor.registry.Q.all_of(tags=[actor.components[Position], self.direction]).get_entities()
+        map = actor.relation_tag[IsIn]
+        stairs_found = actor.registry.Q.all_of(tags=[actor.components[Position], self.direction], relations=[(IsIn, map)]).get_entities()
         if not stairs_found:
             log_manager.add_message(f"There are no {self.direction}ward stairs here!", COLOR_MAGENTA)
             return
