@@ -20,6 +20,8 @@ Accordingly:
 | `event_manager.py` | Defines `Event` and `Observer` classes for implementing the observer pattern. |
 | `game_manager.py` | The top-level manager. It sits above and can dictate to everything else. Manages the main loop and state changes. |
 | `global_manager.py` | Manages global, mutable variables. |
+| `inventory_manager.py` | Manages inventory. |
+| `log_manager.py` | Manages the message log. |
 | `tile_manager.py` | Manages the tileset. |
 | `world_manager.py` | Generates the game world. |
 

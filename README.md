@@ -14,6 +14,7 @@ Features include base implementations of:
 - keyboard controls
 - map generation
 - inventory
+- message log
 
 
 ## Install
