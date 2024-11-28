@@ -7,7 +7,8 @@ import tcod.ecs
 
 from game.actions.base_action import BaseAction
 from game.components import Position
-from game.managers import global_manager
+from game.constants import COLOR_MAGENTA
+from game.managers import global_manager, log_manager
 from game.tags import IsIn
 
 
@@ -20,7 +21,7 @@ class TakeStairsAction(BaseAction):
     def __call__(self, actor: tcod.ecs.Entity) -> None:
         stairs_found = actor.registry.Q.all_of(tags=[actor.components[Position], self.direction]).get_entities()
         if not stairs_found:
-            print(f"There are no {self.direction}ward stairs here!")
+            log_manager.add_message(f"There are no {self.direction}ward stairs here!", COLOR_MAGENTA)
             return
 
         if self.direction == "down":

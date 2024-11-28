@@ -13,12 +13,12 @@ from game.components import Graphic, Position, Tiles
 from game.constants import COLOR_BLACK, COLOR_GROUND, COLOR_WATER, COLOR_WHITE, DIRECTION_KEYS
 from game.managers.actor_manager import do_action
 from game.managers.event_manager import Observer
-from game.managers.ui_manager import UIManager
+from game.managers.log_manager import LogManager
 from game.states.base_state import BaseState
 from game.tags import IsIn, IsPlayer
 from game.ui.ui_debug_panel import UIDebugPanel
 from game.ui.ui_inventory_panel import UIInventoryPanel
-from game.ui.ui_message_panel import UIMessagePanel
+from game.ui.ui_log_panel import UILogPanel
 from game.ui.ui_panel import UIPanel
 
 
@@ -36,7 +36,7 @@ class PlayState(BaseState, Observer):
     # UI.
     ui_debug_panel: UIDebugPanel
     ui_inventory_panel: UIInventoryPanel
-    ui_message_panel: UIMessagePanel
+    ui_log_panel: UILogPanel
     ui_panels: dict[str, UIPanel] = {}
 
     # A UI panel which covers the whole screen.
@@ -44,13 +44,14 @@ class PlayState(BaseState, Observer):
     ui_full_panel: UIPanel | None = None
 
     def __init__(self) -> None:
+        self.log_manager = LogManager()
+
         # Initialise UI.
-        self.ui_manager = UIManager()
         self.ui_debug_panel = UIDebugPanel()
         self.ui_inventory_panel = UIInventoryPanel()
-        self.ui_message_panel = UIMessagePanel()
+        self.ui_log_panel = UILogPanel()
         self.ui_panels["ui_debug_panel"] = self.ui_debug_panel
-        self.ui_panels["ui_message_panel"] = self.ui_message_panel
+        self.ui_panels["ui_log_panel"] = self.ui_log_panel
 
         # Observe events.
         Observer.__init__(self)

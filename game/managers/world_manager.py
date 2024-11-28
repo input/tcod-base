@@ -10,6 +10,7 @@ from tcod.ecs import Registry
 import game.managers.global_manager as global_manager
 from game.components import Graphic, Name, Position, Quantity, Tiles
 from game.constants import COLOR_BLACK, COLOR_GOLD, COLOR_MAGENTA, GROUND, MAP_HEIGHT, MAP_WIDTH, WATER
+from game.managers.log_manager import Log
 from game.tags import IsActor, IsIn, IsItem, IsPlayer
 
 
@@ -17,6 +18,7 @@ def new_world() -> Registry:
     """Generate a new world."""
 
     world = Registry()
+    world[None].components[Log] = Log()
 
     # Create entities and assign components and tags to them.
     # https://python-tcod.readthedocs.io/en/latest/tutorial/part-02.html
