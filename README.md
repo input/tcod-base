@@ -17,6 +17,21 @@ Features include base implementations of:
 - message log
 
 
+## Screenshots
+
+![tcod-base main menu](/assets/screenshots/main-menu.png)
+*Main menu*
+
+![tcod-base ground map](/assets/screenshots/map-ground.png)
+*Ground map*
+
+![tcod-base water map](/assets/screenshots/map-water.png)
+*Water map*
+
+![tcod-base inventory](/assets/screenshots/inventory.png)
+*Inventory*
+
+
 ## Install
 
 Download or clone the repository:
